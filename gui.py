@@ -1,45 +1,45 @@
 import tkinter as tk
-from logic import Logic, HEIGHT, WIDTH, MOVEMENT_DELAY, DOT_SIZE
+from logic import *
 
 class GUI:
-    def __init__(self, master: tk.Tk) -> None:
+    def __init__(self, game: tk.Tk) -> None:
         """
         Start Gui setup for the the game,
         Not limited to but includes window, title, sizes, buttons etc
         We are also setting up our direction keys here,
         (W, A, S, D) & (Arrows Up, Down, Right, Left)
         """
-        self.master = master
-        self.master.title("Snake")
-        self.master.resizable(False, False)
+        self.game = game
+        self.game.title("Snake")
+        self.game.resizable(False, False)
         self.player_id = "Player 1"
         self.logic = Logic(self.player_id)
-        self.canvas = tk.Canvas(self.master, width=WIDTH, height=HEIGHT, bg='black')
+        self.canvas = tk.Canvas(self.game, width=WIDTH, height=HEIGHT, bg='black')
         self.canvas.pack()
-        self.player_label = tk.Label(self.master, text=f"Active Player: {self.player_id}", font=('Arial', 16))
+        self.player_label = tk.Label(self.game, text=f"Active Player: {self.player_id}", font=('Arial', 16))
         self.player_label.pack()
-        self.score_label = tk.Label(self.master, text="Score: 0", font=('Arial', 14))
+        self.score_label = tk.Label(self.game, text="Score: 0", font=('Arial', 14))
         self.score_label.pack()
-        self.leaderboard_label = tk.Label(self.master, text="Leaderboard:\n" + self.logic.get_leaderboard(), font=('Arial', 14))
+        self.leaderboard_label = tk.Label(self.game, text="Leaderboard:\n" + self.logic.get_leaderboard(), font=('Arial', 14))
         self.leaderboard_label.pack()
-        self.start_button = tk.Button(self.master, text="Start Game", command=self.start)
+        self.start_button = tk.Button(self.game, text="Start Game", command=self.start)
         self.start_button.pack()
-        self.player_button = tk.Button(self.master, text="Switch Player", command=self.switch_player)
+        self.player_button = tk.Button(self.game, text="Switch Player", command=self.switch_player)
         self.player_button.pack()
 
-        self.master.bind("<Left>", self.pressed_keys)
-        self.master.bind("<Right>", self.pressed_keys)
-        self.master.bind("<Up>", self.pressed_keys)
-        self.master.bind("<Down>", self.pressed_keys)
-        self.master.bind("a", self.pressed_keys)
-        self.master.bind("d", self.pressed_keys)
-        self.master.bind("w", self.pressed_keys)
-        self.master.bind("s", self.pressed_keys)
+        self.game.bind("<Left>", self.pressed_keys)
+        self.game.bind("<Right>", self.pressed_keys)
+        self.game.bind("<Up>", self.pressed_keys)
+        self.game.bind("<Down>", self.pressed_keys)
+        self.game.bind("a", self.pressed_keys)
+        self.game.bind("d", self.pressed_keys)
+        self.game.bind("w", self.pressed_keys)
+        self.game.bind("s", self.pressed_keys)
         
-        self.reset_scores_button = tk.Button(self.master, text="Reset Scores", command=self.reset_scores)
+        self.reset_scores_button = tk.Button(self.game, text="Reset Scores", command=self.reset_scores)
         self.reset_scores_button.pack()
         
-        self.master.protocol("WM_DELETE_WINDOW", self.ending)
+        self.game.protocol("WM_DELETE_WINDOW", self.ending)
     
     def reset_scores(self) -> None:
         """
@@ -95,7 +95,7 @@ class GUI:
             self.score_label.config(text=f"Score: {self.logic.score}")
             self.leaderboard_label.config(text="Leaderboard:\n" + self.logic.get_leaderboard())
             if self.logic.running:
-                self.master.after(MOVEMENT_DELAY, self.refresh)
+                self.game.after(MOVEMENT_DELAY, self.refresh)
             else:
                 self.logic.refresh_leaderboard()
                 self.canvas.create_text(WIDTH // 2, HEIGHT // 2, text="Game Over", fill="white", font=('Arial', 24))
@@ -131,4 +131,4 @@ class GUI:
         Handling the Window Closing 
         """
         self.logic.refresh_leaderboard()
-        self.master.destroy()
+        self.game.destroy()
